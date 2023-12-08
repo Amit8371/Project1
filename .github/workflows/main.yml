@@ -2,24 +2,22 @@ name: Project1
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   build:
-
-    runs-on: windows-2019
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - uses: actions/setup-python@v4
         with:
-          python-version: 3.12
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-      - name: Run tests  # Add more steps as needed
-        run: |
-          # Add commands to run tests or other tasks
+          python-version: '3.12'
+      - uses: actions/checkout@v4
+      - run: pip install -r requirements.txt
+      - name: Build and Push Docker Image
+        uses: mr-smithers-excellent/docker-build-push@v4
+        with:
+          image: amit8371/project123
+          registry: docker.io
+          username: ${{secrets.DOCKER_USERNAME}}
+          password: ${{secrets.DOCKER_PASSWORD}}
